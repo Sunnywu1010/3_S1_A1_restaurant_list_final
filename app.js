@@ -1,9 +1,9 @@
 // 使用 require 載入 Express
-// 並且把載入的 express 套件在執行後，存成一個名為 app 的變數
-// 先定義要使用連接埠號 (port number) ，預設 3000
 const express = require("express");
 // 設定在 Express 中使用的樣版引擎
 const exphbs = require("express-handlebars");
+
+
 const app = express();
 const restaurantList = require("./restaurant.json");
 const port = 3000;
