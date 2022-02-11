@@ -2,7 +2,16 @@
 const express = require("express");
 // 設定在 Express 中使用的樣版引擎
 const exphbs = require("express-handlebars");
-
+// 載入 mongoose
+const mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost/2-3_A7_restaurant_list");
+const db = mongoose.connection;
+db.on("error", () => {
+  console.log("mongodb error");
+});
+db.once("open", () => {
+  console.log("mongodb connected");
+});
 
 const app = express();
 const restaurantList = require("./restaurant.json");
