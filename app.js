@@ -14,7 +14,7 @@ db.once("open", () => {
 });
 
 const app = express();
-const restaurantList = require("./restaurant.json");
+const restaurantList = require("./models/restaurant");
 const port = 3000;
 
 // app.engine：定義要使用的樣板引擎
@@ -22,34 +22,67 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 // 靜態檔案，
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// 使用 Express 傳送回應給使用者
+// GET "/" 瀏覽所有餐廳
 app.get("/", (req, res) => {
-  res.render("index", { restaurants: restaurantList.results });
+  restaurantList
+    .find()
+    .lean()
+    .then((restaurants) => {
+      res.render("index", { restaurants });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
-// params
-app.get("/restaurants/:restaurants_id", (req, res) => {
-  const restaurant = restaurantList.results.find(
-    (restaurant) => restaurant.id.toString() === req.params.restaurants_id
-  );
-  res.render("show", { restaurants: restaurant });
+// 瀏覽特定餐廳
+app.get("/restaurants/:id", (req, res) => {
+  const id = req.params.id;
+  return restaurantList
+    .findById(id)
+    .lean()
+    .then((restaurant) => res.render("show", { restaurant }))
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
 // search
 app.get("/search", (req, res) => {
   const keyword = req.query.keyword;
-  const restaurant = restaurantList.results.filter(
-    (restaurant) =>
-      restaurant.name.toLowerCase().includes(keyword.toLowerCase()) ||
-      restaurant.category.toLowerCase().includes(keyword.toLowerCase())
-  );
-
-  res.render("index", {
-    restaurants: restaurant,
-    keyword: keyword,
+  if (!keyword) {
+    res.redirect("/");
+  }
+  return restaurantList
+    .find()
+    .lean()
+    .then((restaurants) => {
+      const restaurantSearch = restaurants.filter(
+        (restaurant) =>
+          restaurant.name.toLowerCase().includes(keyword.toLowerCase()) ||
+          restaurant.category.toLowerCase().includes(keyword.toLowerCase())
+      );
+      res.render("index", { restaurants: restaurantSearch, keyword });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+});
+// 新增餐廳
+app.get("/restaurant/new", (req, res) => {
+  res.render("new")
   });
+
+app.post("/restaurants", (req, res) => {
+  return restaurantList
+    .create(req.body)
+    .then(() => res.redirect("/"))
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
 // 啟動並監聽伺服器

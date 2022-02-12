@@ -50,37 +50,68 @@
   <div class="row">
     <div class="col-md-10 col-12 mx-auto">
       <div class="card-columns">
-          {{#each restaurants}}
-            <a href="/restaurants/{{this.id}}" class="text-secondary">
-              <div class="card mb-3">
-                <img
-                  class="card-img-top"
-                  src="{{this.image}}"
-                  alt="{{this.name}}"
-                />
-                <div class="card-body p-3">
-                  <h6 class="card-title mb-1">{{this.name}}</h6>
+        {{#each restaurants}}
+          <div>
 
-                  <div class="restaurant-category mb-1">
-                    <i class="fas fa-utensils pr-2"></i>
-                    {{this.category}}
-                  </div>
+            <div class="card mb-3">
 
-                  <span
-                    class="badge badge-pill badge-danger font-weight-normal"
-                  >
-                    {{this.rating}}
+              <img
+                class="card-img-top"
+                src="{{this.image}}"
+                alt="{{this.name}}"
+              />
+              <div class="card-body p-3">
+                <h6 class="card-title mb-1">{{this.name}}</h6>
 
-                    <i class="fas fa-star fa-xs"></i>
-                  </span>
-
+                <div class="restaurant-category mb-1">
+                  <i class="fas fa-utensils pr-2"></i>
+                  {{this.category}}
                 </div>
+
+                <span class="badge badge-pill badge-danger font-weight-normal">
+                  {{this.rating}}
+
+                  <i class="fas fa-star fa-xs"></i>
+                </span>
+
               </div>
-            </a>
-          {{/each}}
-       
+              <div class="card-footer d-flex justify-content-start flex-wrap">
+                <a href="/restaurants/{{this._id}}" class="text-secondary">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm"
+                  >資訊</button></a>
+                <a href="/restaurants/{{this._id}}/edit" class="text-secondary">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary btn-sm"
+                  >編輯</button></a>
+                <form
+                  action="/restaurant/{{this._id}}/delete"
+                  method="post"
+                  style="display: inline;"
+                >
+                  <button
+                    type="submit"
+                    class="btn btn-outline-danger btn-sm"
+                  >刪除</button></form>
+
+              </div>
+            </div>
+
+          </div>
+
+        {{/each}}
 
       </div>
     </div>
   </div>
 </div>
+
+<!-- 新增餐廳 -->
+<a href="/restaurant/new">
+  <button
+    class="btn btn-info"
+    style="position:fixed; bottom: 0%; right: 0%; margin: 1vw; z-index:100;"
+  >新增餐廳</button>
+</a>

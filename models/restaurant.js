@@ -38,4 +38,4 @@ const resSchema = new Schema({
     required: true,
   },
 });
-module.exports = mongoose.model("Res", resSchema);
+module.exports = mongoose.model("Restaurant", resSchema);
