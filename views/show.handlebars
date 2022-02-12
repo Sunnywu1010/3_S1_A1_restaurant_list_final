@@ -66,4 +66,22 @@
       />
     </div>
   </div>
+  <div class="row d-flex justify-content-end flex-wrap">
+               
+                <a href="/restaurants/{{restaurant._id}}/edit" class="text-secondary">
+                  <button
+                    type="button"
+                    class="btn btn-secondary mr-2"
+                  >編輯</button></a>
+                <form
+                  action="/restaurant/{{restaurant._id}}/delete"
+                  method="post"
+                  style="display: inline;"
+                >
+                  <button
+                    type="submit"
+                    class="btn btn-danger mr-2"
+                  >刪除</button></form>
+
+              </div>
 </div>

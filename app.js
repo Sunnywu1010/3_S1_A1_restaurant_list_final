@@ -73,13 +73,27 @@ app.get("/search", (req, res) => {
 });
 // 新增餐廳
 app.get("/restaurant/new", (req, res) => {
-  res.render("new")
-  });
+  res.render("new");
+});
 
 app.post("/restaurants", (req, res) => {
   return restaurantList
     .create(req.body)
     .then(() => res.redirect("/"))
+    .catch((error) => {
+      console.log(error);
+    });
+});
+
+// 刪除餐廳
+app.post("/restaurant/:id/delete", (req, res) => {
+  const id = req.params.id;
+  return restaurantList
+    .findById(id)
+    .then((restaurant) => {
+      restaurant.remove();
+    })
+    .then(()=>{res.redirect('/')})
     .catch((error) => {
       console.log(error);
     });
