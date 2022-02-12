@@ -71,8 +71,12 @@
                 <a href="/restaurants/{{restaurant._id}}/edit" class="text-secondary">
                   <button
                     type="button"
-                    class="btn btn-secondary mr-2"
+                    class="btn btn-primary mr-2"
                   >編輯</button></a>
+                  <a href="/"><button
+          type="button"
+          class="btn btn-outline-secondary mr-2"
+        >首頁</button></a>
                 <form
                   action="/restaurant/{{restaurant._id}}/delete"
                   method="post"
@@ -80,7 +84,7 @@
                 >
                   <button
                     type="submit"
-                    class="btn btn-danger mr-2"
+                    class="btn btn-outline-danger mr-2"
                   >刪除</button></form>
 
               </div>
