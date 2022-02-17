@@ -18,9 +18,9 @@
   <div class="banner"></div>
 </header>
 
-<!-- search bar -->
+<!-- search bar and sort bar-->
 <div class="container search-bar">
-  <div class="search-bar-outer">
+  <div class="search-bar-outer flex-grow-1">
     <div class="search-bar-inner">
       <form action="/search">
         <h4 class="mb-2">尋找餐廳：</h4>
@@ -39,22 +39,35 @@
                 class="fas fa-search"
               ></i></button>
           </div>
+
         </div>
       </form>
     </div>
   </div>
-</div>
 
+</div>
+<div class="container">
+
+  <div class="input-group mt-4 justify-content-end">
+    <form action="/sort">
+      <select name="sort" id="sort-selector" onchange="submit()">
+        <option>Sort</option>
+        <option value="name_asc">A→Z</option>
+        <option value="name_desc">Z→A</option>
+        <option value="category">類別</option>
+        <option value="location">地區</option>
+      </select>
+    </form>
+  </div>
+</div>
 <!-- restaurant list -->
-<div class="container mt-5">
+<div class="container mt-4">
   <div class="row">
     <div class="col-md-10 col-12 mx-auto">
       <div class="card-columns">
         {{#each restaurants}}
           <div>
-
             <div class="card mb-3">
-
               <img
                 class="card-img-top"
                 src="{{this.image}}"
@@ -87,7 +100,7 @@
                     class="btn btn-outline-secondary btn-sm"
                   >編輯</button></a>
                 <form
-                  action="/restaurant/{{this._id}}/delete"
+                  action="/restaurants/{{this._id}}?_method=DELETE"
                   method="post"
                   style="display: inline;"
                 >
@@ -109,7 +122,7 @@
 </div>
 
 <!-- 新增餐廳 -->
-<a href="/restaurant/new">
+<a href="/new">
   <button
     class="btn btn-info"
     style="position:fixed; bottom: 0%; right: 0%; margin: 1vw; z-index:100;"
