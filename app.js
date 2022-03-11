@@ -21,6 +21,7 @@ app.use(
   app.use(express.static("public"));
   app.use(methodOverride('_method'))
   usePassport(app);
+  
   app.use(routes)
 
 
