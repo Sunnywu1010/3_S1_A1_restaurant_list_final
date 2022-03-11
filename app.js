@@ -10,18 +10,18 @@ require('./config/mongoose')
 const app = express();
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
-usePassport(app);
 app.use(
   session({
     secret: "ThisIsMySecret",
     resave: false,
     saveUninitialized: true,
   })
-);
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("public"));
-app.use(methodOverride('_method'))
-app.use(routes)
+  );
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.static("public"));
+  app.use(methodOverride('_method'))
+  usePassport(app);
+  app.use(routes)
 
 
 app.listen(port, () => {

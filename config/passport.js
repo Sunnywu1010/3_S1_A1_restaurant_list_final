@@ -1,5 +1,6 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const User = require("../models/user");
 module.exports = (app) => {
   // initialize Passport module
   app.use(passport.initialize());
@@ -10,11 +11,14 @@ module.exports = (app) => {
       User.findOne({ email })
         .then((user) => {
           if (!user) {
+            console.log("That email is not registered!");
             return done(null, false, {
               message: "That email is not registered!",
             });
           }
           if (user.password !== password) {
+            console.log("Email or Password incorrect.");
+
             return done(null, false, {
               message: "Email or Password incorrect.",
             });
@@ -27,6 +31,7 @@ module.exports = (app) => {
   // set serializeUser and deserializeUser
   // serializeUser: if user exist, set user.id in to session
   passport.serializeUser((user, done) => {
+    console.log(user)
     done(null, user.id);
   });
   // deserializeUser: if need user info, then find it by user.id
