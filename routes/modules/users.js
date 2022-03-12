@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../../models/user");
 const passport = require("passport");
+const bcrypt = require("bcryptjs");
 //set the router of login page : GET and POST
 router.get("/login", (req, res) => {
   res.render("login");
@@ -56,16 +57,19 @@ router.post("/register", (req, res) => {
         password,
         confirmPassword,
       });
-    } else {
-      // if not, create in mongoose
-      return User.create({
-        name,
-        email,
-        password,
-      })
-        .then(() => res.redirect("/")) //whether exist or not go back to homepage
-        .catch((err) => console.log(err));
     }
+    return bcrypt
+      .genSalt(10) // salt: complex index 10
+      .then((salt) => bcrypt.hash(password, salt)) // create hash with salt
+      .then((hash) =>
+        User.create({
+          name,
+          email,
+          password: hash, //hash which is created to be password
+        })
+      )
+      .then(() => res.redirect("/"))
+      .catch((err) => console.log(err));
   });
 });
 router.get("/logout", (req, res) => {
