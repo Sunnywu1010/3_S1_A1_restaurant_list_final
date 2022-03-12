@@ -3,9 +3,10 @@ const router = express.Router();
 const restaurantList = require("../../models/restaurant");
 
 router.get("/:id", (req, res) => {
-  const id = req.params.id;
+  const _id = req.params.id;
+  const userId = req.user._id;
   return restaurantList
-    .findById(id)
+    .findOne({ _id, userId })
     .lean()
     .then((restaurant) => res.render("show", { restaurant }))
     .catch((error) => {
@@ -34,24 +35,47 @@ router.get("/search", (req, res) => {
       console.log(error);
     });
 });
-// 新增餐廳
+// add restaurant
 router.get("/new", (req, res) => {
   res.render("new");
 });
 
 router.post("/", (req, res) => {
+  const userId = req.user._id;
+  const {
+    name,
+    name_en,
+    category,
+    image,
+    location,
+    phone,
+    google_map,
+    rating,
+    description,
+  } = req.body;
   return restaurantList
-    .create(req.body)
+    .create({
+      name,
+      name_en,
+      category,
+      image,
+      location,
+      phone,
+      google_map,
+      rating,
+      description,
+      userId,
+    })
     .then(() => res.redirect("/"))
-    .catch((error) => {
-      console.log(error);
-    });
+    .catch((error) => console.log(error));
 });
-// 編輯餐廳
+
+// edit restaurant
 router.get("/:id/edit", (req, res) => {
-  const id = req.params.id;
+  const _id = req.params.id;
+  const userId = req.user._id;
   return restaurantList
-    .findById(id)
+    .findOne({ _id, userId })
     .lean()
     .then((restaurant) => {
       res.render("edit", { restaurant });
@@ -61,19 +85,22 @@ router.get("/:id/edit", (req, res) => {
     });
 });
 router.put("/:id", (req, res) => {
-  const id = req.params.id;
-  const name = req.body.name;
-  const name_en = req.body.name_en;
-  const category = req.body.category;
-  const image = req.body.image;
-  const location = req.body.location;
-  const phone = req.body.phone;
-  const google_map = req.body.google_map;
-  const rating = req.body.rating;
-  const description = req.body.description;
+  const _id = req.params.id;
+  const userId = req.user._id;
+  const {
+    name,
+    name_en,
+    category,
+    image,
+    location,
+    phone,
+    google_map,
+    rating,
+    description,
+  } = req.body;
 
   return restaurantList
-    .findById(id)
+    .findOne({ _id, userId })
     .then((restaurant) => {
       restaurant.name = name;
       restaurant.name_en = name_en;
@@ -87,7 +114,7 @@ router.put("/:id", (req, res) => {
       return restaurant.save();
     })
     .then(() => {
-      res.redirect(`/restaurants/${id}`);
+      res.redirect(`/restaurants/${_id}`);
     })
     .catch((error) => {
       console.log(error);
@@ -96,9 +123,10 @@ router.put("/:id", (req, res) => {
 
 // 刪除餐廳
 router.delete("/:id", (req, res) => {
-  const id = req.params.id;
+  const _id = req.params.id;
+  const userId = req.user._id;
   return restaurantList
-    .findById(id)
+    .findOne({ _id, userId })
     .then((restaurant) => {
       restaurant.remove();
     })
