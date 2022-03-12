@@ -11,7 +11,6 @@ module.exports = (app) => {
       User.findOne({ email })
         .then((user) => {
           if (!user) {
-            console.log("That email is not registered!");
             return done(null, false, {
               message: "That email is not registered!",
             });
