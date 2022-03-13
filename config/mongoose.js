@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const db = mongoose.connection;
 
-mongoose.connect("mongodb://localhost/3_S1_A1_restaurant_list_final");
+mongoose.connect(process.env.MONGODB_URI);
 db.on("error", () => {
   console.log("mongodb error");
 });

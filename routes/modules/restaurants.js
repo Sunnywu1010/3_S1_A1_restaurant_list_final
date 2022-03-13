@@ -14,32 +14,8 @@ router.get("/:id", (req, res) => {
     });
 });
 
-// search
-router.get("/search", (req, res) => {
-  const keyword = req.query.keyword;
-  if (!keyword) {
-    res.redirect("/");
-  }
-  return restaurantList
-    .find()
-    .lean()
-    .then((restaurants) => {
-      const restaurantSearch = restaurants.filter(
-        (restaurant) =>
-          restaurant.name.toLowerCase().includes(keyword.toLowerCase()) ||
-          restaurant.category.toLowerCase().includes(keyword.toLowerCase())
-      );
-      res.render("index", { restaurants: restaurantSearch, keyword });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-});
-// add restaurant
-router.get("/new", (req, res) => {
-  res.render("new");
-});
 
+// add restaurant
 router.post("/", (req, res) => {
   const userId = req.user._id;
   const {

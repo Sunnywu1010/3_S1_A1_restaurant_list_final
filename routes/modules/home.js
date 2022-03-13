@@ -15,36 +15,30 @@ router.get("/", (req, res) => {
 });
 // sort function
 router.get("/sort", (req, res) => {
+  const userId = req.user._id;
   const [property, sortBy] = req.query.sort.split("_");
   restaurantList
-    .find()
+    .find({ userId })
     .lean()
     .sort({ [property]: sortBy })
     .then((restaurants) => res.render("index", { restaurants }))
     .catch((error) => console.log(error));
 });
-// 新增餐廳
+// set routes of add restaurant page
 router.get("/new", (req, res) => {
   res.render("new");
 });
 
-router.post("/", (req, res) => {
-  return restaurantList
-    .create(req.body)
-    .then(() => res.redirect("/"))
-    .catch((error) => {
-      console.log(error);
-    });
-});
 
 // search
 router.get("/search", (req, res) => {
   const keyword = req.query.keyword;
+  const userId = req.user._id;
   if (!keyword) {
     res.redirect("/");
   }
   return restaurantList
-    .find()
+    .find({ userId })
     .lean()
     .then((restaurants) => {
       const restaurantSearch = restaurants.filter(

@@ -4,8 +4,12 @@ const session = require("express-session");
 const usePassport = require("./config/passport");
 const methodOverride = require("method-override");
 const flash = require("connect-flash"); 
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const routes=require('./routes');
-const port = 3000;
+const port = process.env.PORT;
 require('./config/mongoose')
 
 const app = express();
@@ -13,11 +17,11 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 app.use(
   session({
-    secret: "ThisIsMySecret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
   })
-  );
+);
   app.use(express.urlencoded({ extended: true }));
   app.use(express.static("public"));
   app.use(methodOverride('_method'))
