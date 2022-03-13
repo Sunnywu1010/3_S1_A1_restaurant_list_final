@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../../models/user");
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
+
 //set the router of login page : GET and POST
 router.get("/login", (req, res) => {
   res.render("login");
@@ -16,6 +17,7 @@ router.post(
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/users/login",
+    
   })
 );
 //set the router of register page : GET and POST
@@ -27,12 +29,15 @@ router.post("/register", (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
   // error flash message
   const errors = [];
-  if (!name || !email || !password || !confirmPassword) {
-    errors.push({ message: "All information is needed!。" });
+
+  if (!email || !password || !confirmPassword) {
+    errors.push({
+      message: "Email and Password must be filled to proceed.",
+    });
   }
   if (password !== confirmPassword) {
     errors.push({
-      message: "The confirm password is not match as the password!",
+      message: "The two passwords must match to proceed.",
     });
   }
   if (errors.length) {
@@ -49,15 +54,18 @@ router.post("/register", (req, res) => {
   User.findOne({ email }).then((user) => {
     // User already exists
     if (user) {
-      console.log("User already exists.");
+      errors.push({ message: "Email already in the database." });
+
       // back to register page and show the info that user typed in
-      res.render("register", {
+      return res.render("register", {
+        errors,
         name,
         email,
         password,
         confirmPassword,
       });
     }
+
     return bcrypt
       .genSalt(10) // salt: complex index 10
       .then((salt) => bcrypt.hash(password, salt)) // create hash with salt
@@ -72,9 +80,10 @@ router.post("/register", (req, res) => {
       .catch((err) => console.log(err));
   });
 });
+// logout page
 router.get("/logout", (req, res) => {
   req.logout();
-  req.flash("success_msg", "Logout already!。");
+  req.flash("success_msg", "You logged out successfully.");
   res.redirect("/users/login");
 });
 module.exports = router;

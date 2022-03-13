@@ -9,25 +9,32 @@ module.exports = (app) => {
   app.use(passport.session());
   // determine if user exist
   passport.use(
-    new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-      User.findOne({ email })
-        .then((user) => {
-          if (!user) {
-            return done(null, false, {
-              message: "That email is not registered!",
-            });
-          }
-          return bcrypt.compare(password, user.password).then((isMatch) => {
-            if (!isMatch) {
-              return done(null, false, {
-                message: "Email or Password incorrect.",
-              });
+    new LocalStrategy(
+      { usernameField: "email", passReqToCallback: true },
+      (req, email, password, done) => {
+        User.findOne({ email })
+          .then((user) => {
+            if (!user) {
+              return done(
+                null,
+                false,
+                req.flash("error_msg", "This email is not registered!")
+              );
             }
-            return done(null, user);
-          });
-        })
-        .catch((err) => done(err, false));
-    })
+            return bcrypt.compare(password, user.password).then((isMatch) => {
+              if (!isMatch) {
+                return done(
+                  null,
+                  false,
+                  req.flash("error_msg", "Email or Password incorrect.")
+                );
+              }
+              return done(null, user);
+            });
+          })
+          .catch((err) => done(err, false));
+      }
+    )
   );
   // set FacebookStrategy for facebook login
   passport.use(
